@@ -34,23 +34,29 @@ class Router
 
     public function dispatch(string $method, string $url): void
     {
-        $handler = $this->routes[$method][$url] ?? null;
+        foreach ($this->routes[$method] ?? [] as $path => $handler) {
+            $pattern = '#^' . preg_replace('#\{(\w+)\}#', '(?P<$1>[^/]+)', $path) . '$#';
 
-        if ($handler === null) {
-            http_response_code(404);
-            echo json_encode(['error' => 'not found']);
+            if (!preg_match($pattern, $url, $matches)) {
+                continue;
+            }
 
+            $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
+
+            if (is_array($handler) && is_string($handler[0])) {
+                [$class, $action] = $handler;
+                $controller = new $class();
+
+                $controller->$action(...$params);
+
+                return;
+            }
+
+            $handler(...$params);
             return;
         }
 
-        if (is_array($handler) && is_string($handler[0])) {
-            [$class, $action] = $handler;
-            $controller = new $class();
-            $controller->$action();
-
-            return;
-        }
-
-        $handler();
+        http_response_code(404);
+        echo json_encode(['error' => 'not found']);
     }
 }
