@@ -42,17 +42,20 @@ class Router
             }
 
             $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
+            $json = file_get_contents('php://input');
+            $data = (array) json_decode($json) ?? [];
 
             if (is_array($handler) && is_string($handler[0])) {
                 [$class, $action] = $handler;
                 $controller = new $class();
 
-                $controller->$action(...$params);
+                $controller->$action(...$params, ...$data);
 
                 return;
             }
 
-            $handler(...$params);
+            $handler(...$params, ...$data);
+
             return;
         }
 
