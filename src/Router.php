@@ -5,12 +5,19 @@ namespace Todo;
 
 class Router
 {
+    private \Todo\Utils\Container $container;
     private array $routes = [
         'GET' => [],
         'POST' => [],
         'PUT' => [],
+        'PATCH' => [],
         'DELETE' => [],
     ];
+
+    public function __construct(\Todo\Utils\Container $c)
+    {
+        $this->container = $c;
+    }
 
     public function get(string $path, callable|array $handler): void
     {
@@ -25,6 +32,11 @@ class Router
     public function put(string $path, callable|array $handler): void
     {
         $this->routes['PUT'][$path] = $handler;
+    }
+
+    public function patch(string $path, callable|array $handler): void
+    {
+        $this->routes['PATCH'][$path] = $handler;
     }
 
     public function delete(string $path, callable|array $handler): void
@@ -43,18 +55,22 @@ class Router
 
             $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
             $json = file_get_contents('php://input');
-            $data = (array) json_decode($json) ?? [];
+            $data = (array)json_decode($json) ?? [];
+            $request = new Request(
+                body: $data,
+                params: $params,
+            );
 
             if (is_array($handler) && is_string($handler[0])) {
                 [$class, $action] = $handler;
-                $controller = new $class();
 
-                $controller->$action(...$params, ...$data);
+                $controller = $this->container->get($class);
+                $controller->$action($request);
 
                 return;
             }
 
-            $handler(...$params, ...$data);
+            $handler($request);
 
             return;
         }
