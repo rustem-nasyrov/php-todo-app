@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Todo;
 
-use Todo\Database;
-use Todo\Utils\Container;
+use Framework\Container;
+use Framework\Database;
 use Todo\Controllers\TodoController;
-use Todo\Services\TodoService;
 use Todo\Repositories\TodoRepository;
+use Todo\Services\TodoService;
 
 $container = new Container();
 

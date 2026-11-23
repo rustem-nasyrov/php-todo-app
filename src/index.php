@@ -4,7 +4,7 @@ declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 $container = require __DIR__ . '/Bootstrap.php';
 
-use Todo\Router;
+use Framework\Router;
 use Todo\Controllers\TodoController;
 
 header('Content-Type: application/json');

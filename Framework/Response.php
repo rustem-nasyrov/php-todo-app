@@ -1,6 +1,6 @@
 <?php
 
-namespace Todo;
+namespace Framework;
 
 class Response
 {

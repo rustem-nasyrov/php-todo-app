@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Todo;
+namespace Framework;
 
 readonly class Request
 {

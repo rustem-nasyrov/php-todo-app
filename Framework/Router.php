@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Todo;
+namespace Framework;
 
 class Router
 {
-    private \Todo\Utils\Container $container;
+    private \Framework\Container $container;
     private array $routes = [
         'GET' => [],
         'POST' => [],
@@ -14,7 +14,7 @@ class Router
         'DELETE' => [],
     ];
 
-    public function __construct(\Todo\Utils\Container $c)
+    public function __construct(\Framework\Container $c)
     {
         $this->container = $c;
     }

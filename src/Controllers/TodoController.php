@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Todo\Controllers;
 
-use Todo\Request;
+use Framework\Request;
 use Todo\Services\TodoService;
 
 class TodoController
